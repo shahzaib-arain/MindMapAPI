@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +39,17 @@ public class JournalService {
         return false;
     }
 
-    public void DeleteEntries(ObjectId id){
-       journalEntryRepository.deleteById(id);
+    public boolean DeleteEntries(ObjectId id) {
+        if (journalEntryRepository.existsById(id)) {
+            journalEntryRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
+    public JournalEntity GetEntryById(ObjectId myId) {
+        return journalEntryRepository.findById(myId).orElse(null);
+    }
+
 
 
 

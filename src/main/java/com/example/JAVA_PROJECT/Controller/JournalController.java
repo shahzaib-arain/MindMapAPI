@@ -24,28 +24,63 @@ public JournalService journalService;
 
 
     @GetMapping
-    public List<JournalEntity> getJournalEntries() {
-        return journalService.GetAllEntries();
+    public ResponseEntity<List<JournalEntity>> getJournalEntries() {
+        List<JournalEntity> entries = journalService.GetAllEntries();
+        if (entries.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(entries);
+        }
+        return ResponseEntity.ok(entries);
+    }
+    @GetMapping("id/{myId}")
+    public ResponseEntity<?> getJournalEntryById(@PathVariable ObjectId myId) {
+        try {
+            JournalEntity entry = journalService.GetEntryById(myId);
+            if (entry != null) {
+                return ResponseEntity.ok(entry);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Journal entry with the given ID not found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching the journal entry.");
+        }
     }
 
+
     @PostMapping
-        public ResponseEntity<?> CreateEntries (@RequestBody JournalEntity MyEntry){
-        journalService.SaveEntry(MyEntry);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> createEntries(@RequestBody JournalEntity myEntry) {
+        try {
+            journalService.SaveEntry(myEntry);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Journal entry created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create journal entry.");
+        }
     }
 
     @PutMapping("id/{myId}")
-    public Boolean UpdateEntry(@PathVariable ObjectId myId, @RequestBody JournalEntity updatedEntry) {
-        return journalService.UpdateEntry(myId, updatedEntry);
+    public ResponseEntity<String> updateEntry(@PathVariable String myId, @RequestBody JournalEntity updatedEntry) {
+        if (!ObjectId.isValid(myId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID format.");
+        }
+        ObjectId id = new ObjectId(myId);
+        boolean isUpdated = journalService.UpdateEntry(id, updatedEntry);
+        if (isUpdated) {
+            return ResponseEntity.ok("Journal entry updated successfully.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Journal entry with the given ID not found.");
     }
 
     @DeleteMapping("id/{myId}")
-    public Boolean  DeleteEntries (@PathVariable ObjectId myId){
-         journalService.DeleteEntries(myId);
-         return true;
+    public ResponseEntity<String> deleteEntries(@PathVariable String myId) {
+        if (!ObjectId.isValid(myId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID format.");
+        }
+        ObjectId id = new ObjectId(myId);
+        boolean isDeleted = journalService.DeleteEntries(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Journal entry deleted successfully.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Journal entry with the given ID not found.");
     }
-
-
 
 
 
