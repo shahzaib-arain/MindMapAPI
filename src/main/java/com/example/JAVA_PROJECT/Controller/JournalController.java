@@ -62,26 +62,28 @@ public class JournalController {
         }
     }
 
-    @PutMapping("id/{myId}")
-    public ResponseEntity<String> updateEntry(@PathVariable String myId, @RequestBody JournalEntity updatedEntry) {
-        if (!ObjectId.isValid(myId)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID format.");
-        }
-        ObjectId id = new ObjectId(myId);
-        boolean isUpdated = journalService.UpdateEntry(id, updatedEntry);
-        if (isUpdated) {
-            return ResponseEntity.ok("Journal entry updated successfully.");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Journal entry with the given ID not found.");
+    @PutMapping("id/{userName}/{myId}")
+    public ResponseEntity<?> updateEntry(@PathVariable ObjectId myId, @PathVariable String userName ,@RequestBody JournalEntity updatedEntry) {
+   JournalEntity old = journalService.GetEntryById(myId);
+
+   if (old != null){
+       old.setTitle(updatedEntry.getTitle() != null && !updatedEntry.getTitle().equals("") ? updatedEntry.getTitle() : old.getTitle());
+       old.setContent(updatedEntry.getContent() != null && !updatedEntry.getTitle().equals("") ? updatedEntry.getContent() : old.getContent());
+       journalService.SaveEntry(old);
+       return  new ResponseEntity<>(old ,HttpStatus.OK);
+
+   }
+   return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
-    @DeleteMapping("id/{myId}")
-    public ResponseEntity<String> deleteEntries(@PathVariable String myId) {
+    @DeleteMapping("id/{userName}/{myId}")
+    public ResponseEntity<String> deleteEntries(@PathVariable String myId,@PathVariable String userName) {
         if (!ObjectId.isValid(myId)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID format.");
         }
         ObjectId id = new ObjectId(myId);
-        boolean isDeleted = journalService.DeleteEntries(id);
+        boolean isDeleted = journalService.DeleteEntries(id,userName);
         if (isDeleted) {
             return ResponseEntity.ok("Journal entry deleted successfully.");
         }

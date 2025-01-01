@@ -4,7 +4,6 @@ package com.example.JAVA_PROJECT.Service;
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Repository.JournalEntryRepository;
-import com.example.JAVA_PROJECT.Repository.UserEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,12 +25,17 @@ public class JournalService {
         return journalEntryRepository.findAll();
 
     }
-    public void SaveEntry (@RequestBody JournalEntity journalEntity, String userName){
+    public void SaveEntry (JournalEntity journalEntity, String userName){
         UserEntity userEntity = userService.findByUserName(userName);
         JournalEntity saved = journalEntryRepository.save(journalEntity);
         userEntity.getJournalEntities().add(saved);
         userService.SaveEntry(userEntity);
     }
+    public void SaveEntry(JournalEntity journalEntity){
+        journalEntryRepository.save(journalEntity);
+    }
+
+
     public Boolean UpdateEntry(ObjectId myId, JournalEntity updatedEntry) {
         Optional<JournalEntity> existingEntry = journalEntryRepository.findById(myId);
 
@@ -48,7 +52,10 @@ public class JournalService {
         return false;
     }
 
-    public boolean DeleteEntries(ObjectId id) {
+    public boolean DeleteEntries(ObjectId id, String userName) {
+        UserEntity userEntity = userService.findByUserName(userName);
+        userEntity.getJournalEntities().removeIf(x -> x.getId().equals(id));
+        userService.SaveEntry(userEntity);
         if (journalEntryRepository.existsById(id)) {
             journalEntryRepository.deleteById(id);
             return true;
