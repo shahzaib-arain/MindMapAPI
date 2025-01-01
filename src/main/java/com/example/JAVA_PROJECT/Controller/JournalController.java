@@ -2,7 +2,9 @@
 package com.example.JAVA_PROJECT.Controller;
 
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
+import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Service.JournalService;
+import com.example.JAVA_PROJECT.Service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -22,10 +24,14 @@ public class JournalController {
     @Autowired
     public JournalService journalService;
 
+    @Autowired
+    private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<List<JournalEntity>> getJournalEntries() {
-        List<JournalEntity> entries = journalService.GetAllEntries();
+
+    @GetMapping("/{userName}")
+    public ResponseEntity<List<JournalEntity>> getJournalEntries(@PathVariable String userName) {
+        UserEntity userEntity = userService.findByUserName(userName);
+        List<JournalEntity> entries = userEntity.getJournalEntities();
         if (entries.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(entries);
         }
@@ -46,10 +52,10 @@ public class JournalController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<String> createEntries(@RequestBody JournalEntity myEntry) {
+    @PostMapping("/{userName}")
+    public ResponseEntity<String> createEntries(@RequestBody JournalEntity myEntry ,@PathVariable String userName) {
         try {
-            journalService.SaveEntry(myEntry);
+            journalService.SaveEntry(myEntry,userName);
             return ResponseEntity.status(HttpStatus.CREATED).body("Journal entry created successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create journal entry.");

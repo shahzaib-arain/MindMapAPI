@@ -1,6 +1,7 @@
 package com.example.JAVA_PROJECT.Entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Document(collection = "journal_entries")
 @Data
+@NoArgsConstructor
 public class JournalEntity {
 
     @Id

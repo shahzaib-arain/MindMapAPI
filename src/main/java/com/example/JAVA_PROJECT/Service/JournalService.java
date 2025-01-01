@@ -2,7 +2,9 @@
 package com.example.JAVA_PROJECT.Service;
 
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
+import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Repository.JournalEntryRepository;
+import com.example.JAVA_PROJECT.Repository.UserEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,12 +19,18 @@ public class JournalService {
     @Autowired
     public JournalEntryRepository journalEntryRepository;
 
+    @Autowired
+    private UserService userService;
+
     public List<JournalEntity> GetAllEntries(){
         return journalEntryRepository.findAll();
 
     }
-    public void SaveEntry (@RequestBody JournalEntity journalEntity){
-        journalEntryRepository.save(journalEntity);
+    public void SaveEntry (@RequestBody JournalEntity journalEntity, String userName){
+        UserEntity userEntity = userService.findByUserName(userName);
+        JournalEntity saved = journalEntryRepository.save(journalEntity);
+        userEntity.getJournalEntities().add(saved);
+        userService.SaveEntry(userEntity);
     }
     public Boolean UpdateEntry(ObjectId myId, JournalEntity updatedEntry) {
         Optional<JournalEntity> existingEntry = journalEntryRepository.findById(myId);
