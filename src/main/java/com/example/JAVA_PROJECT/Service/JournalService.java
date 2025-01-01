@@ -1,3 +1,4 @@
+
 package com.example.JAVA_PROJECT.Service;
 
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
@@ -16,10 +17,10 @@ public class JournalService {
     @Autowired
     public JournalEntryRepository journalEntryRepository;
 
-   public List<JournalEntity> GetAllEntries(){
-       return journalEntryRepository.findAll();
+    public List<JournalEntity> GetAllEntries(){
+        return journalEntryRepository.findAll();
 
-   }
+    }
     public void SaveEntry (@RequestBody JournalEntity journalEntity){
         journalEntryRepository.save(journalEntity);
     }

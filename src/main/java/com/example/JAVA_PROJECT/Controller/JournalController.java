@@ -19,8 +19,8 @@ import java.util.Map;
 @RequestMapping("Journal")
 public class JournalController {
 
-@Autowired
-public JournalService journalService;
+    @Autowired
+    public JournalService journalService;
 
 
     @GetMapping
