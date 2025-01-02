@@ -7,8 +7,10 @@ import com.example.JAVA_PROJECT.Repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.management.RuntimeMBeanException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +27,18 @@ public class JournalService {
         return journalEntryRepository.findAll();
 
     }
+    @Transactional
     public void SaveEntry (JournalEntity journalEntity, String userName){
-        UserEntity userEntity = userService.findByUserName(userName);
-        JournalEntity saved = journalEntryRepository.save(journalEntity);
-        userEntity.getJournalEntities().add(saved);
-        userService.SaveEntry(userEntity);
+        try{
+            UserEntity userEntity = userService.findByUserName(userName);
+            JournalEntity saved = journalEntryRepository.save(journalEntity);
+            userEntity.getJournalEntities().add(saved);
+            userService.SaveEntry(userEntity);
+        }catch (Exception e){
+            System.out.println(e);
+            throw new RuntimeException("AN error occurred while saving the entry",e);
+        }
+
     }
     public void SaveEntry(JournalEntity journalEntity){
         journalEntryRepository.save(journalEntity);
