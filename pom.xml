@@ -56,6 +56,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Spring Security Configuration  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
