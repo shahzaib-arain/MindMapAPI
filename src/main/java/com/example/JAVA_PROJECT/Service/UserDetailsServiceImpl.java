@@ -1,6 +1,5 @@
-<<<<<<< Updated upstream
-package com.example.JAVA_PROJECT.Service;public class UserDetailsServiceImpl {
-=======
+
+
 package com.example.JAVA_PROJECT.Service;
 
 import com.example.JAVA_PROJECT.Entity.UserEntity;
@@ -10,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -30,5 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         throw new UsernameNotFoundException("User not found with Username : " + username);
     }
->>>>>>> Stashed changes
+
 }
+

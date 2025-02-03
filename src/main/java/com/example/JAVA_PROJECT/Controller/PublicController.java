@@ -1,14 +1,32 @@
 package com.example.JAVA_PROJECT.Controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.JAVA_PROJECT.Entity.UserEntity;
+import com.example.JAVA_PROJECT.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class HealthCheck {
+@RequestMapping("/public")
+public class PublicController {
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("abc")
-    public String HealthChecked(){
+    public String HealthChecked() {
         return "AGAIN START JAVA SHAME ON YOU ";
-
-
     }
+
+    @PostMapping("/create-user")
+    public ResponseEntity<?> createUser(@RequestBody UserEntity userEntity) {
+        try {
+            userService.SaveEntry(userEntity);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Journal entry created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create journal entry.");
+        }
+    }
+
 }
