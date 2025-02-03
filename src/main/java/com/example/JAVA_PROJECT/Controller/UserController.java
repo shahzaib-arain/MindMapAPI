@@ -3,12 +3,15 @@ package com.example.JAVA_PROJECT.Controller;
 
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
+import com.example.JAVA_PROJECT.Repository.UserEntryRepository;
 import com.example.JAVA_PROJECT.Service.JournalService;
 import com.example.JAVA_PROJECT.Service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +25,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    public UserEntryRepository userEntryRepository;
+
     @GetMapping
     public ResponseEntity<List<UserEntity>> GetAllUserEntries() {
         List<UserEntity> userEntities = userService.GetAllEntries();
@@ -31,25 +37,12 @@ public class UserController {
         return ResponseEntity.ok(userEntities);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserEntity userEntity) {
-        try {
-            userService.SaveEntry(userEntity);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Journal entry created successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create journal entry.");
-        }
-    }
 
-    @PutMapping("/{userName}")
-    public ResponseEntity<?> updateEntry(@PathVariable String userName, @RequestBody UserEntity userEntity) {
+    @PutMapping
+    public ResponseEntity<?> updateEntry(@RequestBody UserEntity userEntity) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
         UserEntity userInDb = userService.findByUserName(userName);
-        if (userInDb == null) {
-            // Return a response indicating the user was not found
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "User not found", "userName", userName));
-        }
 
         // Update the user details
         userInDb.setUserName(userEntity.getUserName());
@@ -63,6 +56,15 @@ public class UserController {
                         "message", "User updated successfully",
                         "updatedUser", userInDb
                 ));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> updateEntry() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userEntryRepository.deleteByUserName(authentication.getName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+
     }
 
 }
