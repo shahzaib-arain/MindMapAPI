@@ -1,9 +1,7 @@
 
 package com.example.JAVA_PROJECT.Service;
 
-import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
-import com.example.JAVA_PROJECT.Repository.JournalEntryRepository;
 import com.example.JAVA_PROJECT.Repository.UserEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ public class UserService {
         return userEntryRepository.findAll();
 
     }
-    public void SaveEntry (@RequestBody UserEntity userEntity){
+    public void SaveNewUser(@RequestBody UserEntity userEntity){
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRoles(Arrays.asList("USER"));
         userEntryRepository.save(userEntity);

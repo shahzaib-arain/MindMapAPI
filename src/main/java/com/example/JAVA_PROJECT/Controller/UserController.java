@@ -1,12 +1,9 @@
 
 package com.example.JAVA_PROJECT.Controller;
 
-import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Repository.UserEntryRepository;
-import com.example.JAVA_PROJECT.Service.JournalService;
 import com.example.JAVA_PROJECT.Service.UserService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +43,7 @@ public class UserController {
         // Update the user details
         userInDb.setUserName(userEntity.getUserName());
         userInDb.setPassword(userEntity.getPassword());
-        userService.SaveEntry(userInDb);
+        userService.SaveNewUser(userInDb);
 
         // Return a success response
         return ResponseEntity

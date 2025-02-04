@@ -22,7 +22,7 @@ public class PublicController {
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestBody UserEntity userEntity) {
         try {
-            userService.SaveEntry(userEntity);
+            userService.SaveNewUser(userEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body("Journal entry created successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create journal entry.");
