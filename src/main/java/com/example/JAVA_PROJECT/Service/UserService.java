@@ -3,6 +3,7 @@ package com.example.JAVA_PROJECT.Service;
 
 import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Repository.UserEntryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -26,10 +28,19 @@ public class UserService {
         return userEntryRepository.findAll();
 
     }
-    public void SaveNewUser(@RequestBody UserEntity userEntity){
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        userEntity.setRoles(Arrays.asList("USER"));
-        userEntryRepository.save(userEntity);
+    public boolean SaveNewUser(@RequestBody UserEntity userEntity){
+        try{
+            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+            userEntity.setRoles(Arrays.asList("USER"));
+            userEntryRepository.save(userEntity);
+            return true;
+        } catch (Exception e){
+            log.error("Error occurred for {} : ",userEntity.getUserName());
+            return false;
+
+        }
+
+
     }
 
     public void SaveAdmin(@RequestBody UserEntity userEntity){
