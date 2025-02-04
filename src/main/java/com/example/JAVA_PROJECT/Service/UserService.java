@@ -31,6 +31,12 @@ public class UserService {
         userEntity.setRoles(Arrays.asList("USER"));
         userEntryRepository.save(userEntity);
     }
+
+    public void SaveAdmin(@RequestBody UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setRoles(Arrays.asList("USER","ADMIN"));
+        userEntryRepository.save(userEntity);
+    }
     public void SaveUserEntry (@RequestBody UserEntity userEntity){
 
         userEntryRepository.save(userEntity);
