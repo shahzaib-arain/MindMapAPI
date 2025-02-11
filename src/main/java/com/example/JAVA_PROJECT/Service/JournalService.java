@@ -4,6 +4,7 @@ package com.example.JAVA_PROJECT.Service;
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Repository.JournalEntryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class JournalService {
 
     @Autowired
@@ -70,7 +72,7 @@ public class JournalService {
                 journalEntryRepository.deleteById(id);
             }
         }catch (Exception e){
-            System.out.println(e);
+            log.error("Error ",e);
             throw new RuntimeException("An error occurred while deleting the Entry ",e);
         }
         return removed;
