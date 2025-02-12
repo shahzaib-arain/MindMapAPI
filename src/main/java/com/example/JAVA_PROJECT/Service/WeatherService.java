@@ -1,23 +1,29 @@
 package com.example.JAVA_PROJECT.Service;
 
 import com.example.JAVA_PROJECT.Api.Response.WeatherResponse;
+import com.example.JAVA_PROJECT.cache.AppCache;
+import com.example.JAVA_PROJECT.constants.Placeholders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+@Service
 public class WeatherService {
 
-    private static final String Apikey = "c8b8e70c6a3858b8edb9870d4213de39";
-    private static final String Api = "http://api.weatherstack.com/current?access_key=ApiKey&query=City";
-
+    @Value("${weather.api.key}")
+    private String Apikey ;
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private AppCache appCache;
+
     public WeatherResponse getWeather(String city){
-        String FinalApi = Api.replace("City",city).replace("ApiKey",Apikey);
+        String FinalApi = appCache.appCache.get(AppCache.Keys.WEATHER_API.toString()).replace(Placeholders.CITY,city).replace(Placeholders.API_KEY,Apikey);
         ResponseEntity<WeatherResponse> response = restTemplate.exchange(FinalApi, HttpMethod.GET, null, WeatherResponse.class);
         WeatherResponse body = response.getBody();
         return body;

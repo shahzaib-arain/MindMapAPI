@@ -1,18 +1,13 @@
-## Spring application configuration
 #spring:
 #  application:
 #    name: JAVA_PROJECT
-#
 #  data:
 #    mongodb:
-#      uri: "mongodb+srv://shahzaibarain0080:ibQIMOQIcYvNYdkt@cluster0.1xuxr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+#      uri: mongodb://localhost:27017/applicationdb
 #      database: applicationdb
 #      auto-index-creation: true
-#
 #  main:
-#    allow-circular-references: false
-#
-#server:
-#  port: 8081
-#  servlet:
-#    context-path: /User
+#    allow-circular-references: true
+#weather:
+#  api:
+#    key: c8b8e70c6a3858b8edb9870d4213de39
