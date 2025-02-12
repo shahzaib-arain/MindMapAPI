@@ -1,6 +1,8 @@
 package com.example.JAVA_PROJECT.Entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -17,13 +19,16 @@ import java.util.List;
 @Component
 @Document(collection = "users")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity {
 
     @Id
     private ObjectId id;
     @Indexed(unique = true)
     private String userName;
-
+    private String email;
+    private String sentimentAnalysis;
     private String password ;
 
     @DBRef
