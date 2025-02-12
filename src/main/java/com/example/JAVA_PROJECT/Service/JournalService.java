@@ -4,17 +4,17 @@ package com.example.JAVA_PROJECT.Service;
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Repository.JournalEntryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.management.RuntimeMBeanException;
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class JournalService {
 
     @Autowired
@@ -33,7 +33,7 @@ public class JournalService {
             UserEntity userEntity = userService.findByUserName(userName);
             JournalEntity saved = journalEntryRepository.save(journalEntity);
             userEntity.getJournalEntities().add(saved);
-            userService.SaveEntry(userEntity);
+            userService.SaveUserEntry(userEntity);
         }catch (Exception e){
             System.out.println(e);
             throw new RuntimeException("AN error occurred while saving the entry",e);
@@ -61,18 +61,24 @@ public class JournalService {
         return false;
     }
 
+    @Transactional
     public boolean DeleteEntries(ObjectId id, String userName) {
-        UserEntity userEntity = userService.findByUserName(userName);
-        userEntity.getJournalEntities().removeIf(x -> x.getId().equals(id));
-        userService.SaveEntry(userEntity);
-        if (journalEntryRepository.existsById(id)) {
-            journalEntryRepository.deleteById(id);
-            return true;
+        boolean removed = false;
+        try{
+            UserEntity userEntity = userService.findByUserName(userName);
+            removed = userEntity.getJournalEntities().removeIf(x -> x.getId().equals(id));
+            if(removed){
+                userService.SaveUserEntry(userEntity);
+                journalEntryRepository.deleteById(id);
+            }
+        }catch (Exception e){
+            log.error("Error ",e);
+            throw new RuntimeException("An error occurred while deleting the Entry ",e);
         }
-        return false;
+        return removed;
     }
-    public JournalEntity GetEntryById(ObjectId myId) {
-        return journalEntryRepository.findById(myId).orElse(null);
+    public Optional<JournalEntity> findById(ObjectId myId) {
+        return journalEntryRepository.findById(myId);
     }
 
 

@@ -1,0 +1,24 @@
+### Spring application configuration
+#spring:
+#  profiles:
+#    active: dev
+
+
+#(BASICALLY WE USED XML FILE FOR THE LOGGING)
+#( FOR CUSTOMIZED debug and trace bcz they used by customization)
+#logging:
+#  level:
+#    com:
+#      example:
+#        JAVA_PROJECT: DEBUG
+
+
+#( FOR off the individual class log )
+#logging:
+#  level:
+#    com:
+#      example:
+#        JAVA_PROJECT:
+#          Service:
+#            UserService: OFF
+

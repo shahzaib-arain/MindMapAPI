@@ -1,0 +1,3 @@
+25-02-05 03:18:58.048 [main] INFO  c.e.J.JavaProjectApplication - Starting JavaProjectApplication using Java 20.0.2 with PID 952 (D:\PROJECTS\JAVA_PROJECT\target\classes started by HP in D:\PROJECTS\JAVA_PROJECT)
+25-02-05 03:18:58.052 [main] INFO  c.e.J.JavaProjectApplication - No active profile set, falling back to 1 default profile: "default"
+25-02-05 03:18:59.905 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
