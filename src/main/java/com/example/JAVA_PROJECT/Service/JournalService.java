@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,19 +30,23 @@ public class JournalService {
 
     }
     @Transactional
-    public void SaveEntry (JournalEntity journalEntity, String userName){
-        try{
+    public void SaveEntry(JournalEntity journalEntity, String userName) {
+        try {
             UserEntity userEntity = userService.findByUserName(userName);
+
+            // Set the current timestamp before saving
+            journalEntity.setDate(LocalDateTime.now());
+
             JournalEntity saved = journalEntryRepository.save(journalEntity);
             userEntity.getJournalEntities().add(saved);
             userService.SaveUserEntry(userEntity);
-        }catch (Exception e){
-            System.out.println(e);
-            throw new RuntimeException("AN error occurred while saving the entry",e);
+        } catch (Exception e) {
+            log.error("Error saving journal entry", e);
+            throw new RuntimeException("An error occurred while saving the entry", e);
         }
-
     }
-    public void SaveEntry(JournalEntity journalEntity){
+
+    public void SaveEntryForUpdate(JournalEntity journalEntity){
         journalEntryRepository.save(journalEntity);
     }
 

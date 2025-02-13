@@ -92,7 +92,7 @@ public class JournalController {
                             .filter(content -> !content.isEmpty())
                             .orElse(existingEntry.getContent()));
 
-                    journalService.SaveEntry(existingEntry);
+                    journalService.SaveEntryForUpdate(existingEntry);
                     return new ResponseEntity<>(existingEntry, HttpStatus.OK);
                 })
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
