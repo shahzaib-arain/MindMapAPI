@@ -10,8 +10,9 @@ public class UserSchedulerTests {
 
     @Autowired
     private UserScheduler userScheduler;
+
     @Test
-    public void testFetchUserAndSendSaMail(){
+    public void testFetchUserAndSendSaMail() {
         userScheduler.fetchUsersAndSendEmail();
     }
 
