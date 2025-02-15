@@ -48,6 +48,8 @@ public class UserController {
         // Update the user details
         userInDb.setUserName(userEntity.getUserName());
         userInDb.setPassword(userEntity.getPassword());
+        userInDb.setEmail(userEntity.getEmail());
+        userInDb.setSentimentAnalysis(userEntity.getSentimentAnalysis());
         userService.SaveNewUser(userInDb);
 
         // Return a success response

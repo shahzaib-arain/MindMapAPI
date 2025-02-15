@@ -30,7 +30,7 @@ public class UserScheduler {
     @Autowired
     private AppCache appCache;
 
-    //@Scheduled(cron = "0 0 9 ? * SUN,FRI")
+    @Scheduled(cron = "0 0 9 ? * SUN,FRI")
    // @Scheduled(cron = "*/5 * * * * *")
     public void fetchUsersAndSendEmail(){
 

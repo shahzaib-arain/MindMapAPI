@@ -19,17 +19,24 @@ public class RedisService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public <T> T get(String key , Class<T> entityClas){
+    public <T> T get(String key, Class<T> entityClas) {
         try {
             Object o = redisTemplate.opsForValue().get(key);
-            ObjectMapper mapper= new ObjectMapper();
-            return mapper.readValue(o.toString(),entityClas);
 
-        }catch (Exception e){
-            log.error("Exception",e);
+            if (o == null) {
+                log.warn("Key '{}' not found in Redis", key);
+                return null; // Or return a default value
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(o.toString(), entityClas);
+
+        } catch (Exception e) {
+            log.error("Exception occurred while fetching key '{}' from Redis", key, e);
             return null;
         }
     }
+
 
     public void set(String key, Object o, Long ttl){
         try {
