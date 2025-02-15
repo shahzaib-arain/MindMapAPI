@@ -12,7 +12,7 @@ public class EmailServiceTests {
     private EmailService emailService;
 @Disabled
 @Test
-    public void SendEmailsToUser(){
+public void SendEmailsToUser(){
     emailService.SendEmail("zaibyaraib@gmail.com","Parhlo Bhai Jaan","Springboot se shuru karo aur Aaag laga do Aaag,,,,,");
 }
 }
