@@ -70,7 +70,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/get")
+    @GetMapping("/greetings")
     public ResponseEntity<?> greetings() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         WeatherResponse weatherResponse = weatherService.getWeather("Karachi");
