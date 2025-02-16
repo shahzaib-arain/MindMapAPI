@@ -3,10 +3,12 @@ package com.example.JAVA_PROJECT.Scheduler;
 import com.example.JAVA_PROJECT.Entity.JournalEntity;
 import com.example.JAVA_PROJECT.Entity.UserEntity;
 import com.example.JAVA_PROJECT.Enum.Sentiment;
+import com.example.JAVA_PROJECT.Model.SentimentData;
 import com.example.JAVA_PROJECT.Repository.UserRepositoryImpl;
 import com.example.JAVA_PROJECT.Service.EmailService;
 import com.example.JAVA_PROJECT.cache.AppCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +32,10 @@ public class UserScheduler {
     @Autowired
     private AppCache appCache;
 
-    @Scheduled(cron = "0 0 9 ? * SUN,FRI")
+    @Autowired
+    private KafkaTemplate<String, SentimentData> kafkaTemplate;
+
+   // @Scheduled(cron = "0 0 9 ? * SUN,FRI")
    // @Scheduled(cron = "*/5 * * * * *")
     public void fetchUsersAndSendEmail(){
 
@@ -55,7 +60,15 @@ public class UserScheduler {
 
             }
             if(mostFrequentSentiment != null) {
-                emailService.SendEmail(user.getEmail(), "Sentiment for last 7 days ",mostFrequentSentiment.toString());
+                SentimentData sentimentData = SentimentData.builder().email(user.getEmail()).sentiment("Sentiment for last 7 days "+mostFrequentSentiment).build();
+                // WARNING: If the Kafka free tier subscription ends, the application may fail to connect to the Kafka cluster then.
+                try {
+                    kafkaTemplate.send("weekly-sentiments",sentimentData.getEmail(),sentimentData);
+
+                }catch (Exception e){
+                    emailService.SendEmail(sentimentData.getEmail(),"Sentiment for previous week ", sentimentData.getSentiment());
+
+                }
             }
 
 
