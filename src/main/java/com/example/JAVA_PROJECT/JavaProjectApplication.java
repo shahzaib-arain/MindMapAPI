@@ -20,6 +20,7 @@ public class JavaProjectApplication {
 	}
 
 	@Bean
+
 	public PlatformTransactionManager add (MongoDatabaseFactory databaseFactory){
 		return new MongoTransactionManager(databaseFactory);
 	}

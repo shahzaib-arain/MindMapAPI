@@ -3,7 +3,6 @@ package com.example.JAVA_PROJECT.cache;
 import com.example.JAVA_PROJECT.Entity.ConfigJournalAppEntity;
 import com.example.JAVA_PROJECT.Repository.ConfigJournalAppRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.experimental.Accessors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
