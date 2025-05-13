@@ -59,6 +59,7 @@ public class JournalController {
     @PostMapping
     public ResponseEntity<String> createEntries(@RequestBody JournalEntity myEntry ) {
         try {
+            System.out.println("Received entry: " + myEntry.toString());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String userName = authentication.getName();
             journalService.SaveEntry(myEntry,userName);

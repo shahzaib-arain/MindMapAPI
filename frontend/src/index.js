@@ -1,17 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { AuthProvider } from "./context/AuthContext"; // Your context provider
+import { BrowserRouter } from "react-router-dom";  // Import BrowserRouter
+import reportWebVitals from "./reportWebVitals"; // Optional for logging web vitals
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+// Wrap the entire app with BrowserRouter here in index.js
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter> {/* Wrap your entire app in BrowserRouter */}
+      <AuthProvider> {/* Your AuthProvider context */}
+        <App /> {/* Your main app component */}
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// Log web vitals to console (optional)
+reportWebVitals(console.log);
